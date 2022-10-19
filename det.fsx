@@ -5,17 +5,34 @@ type Matrix = { values: float[,] }
     
     end
 
+type result =
+    | Error of string
+    | SuccessZero of int 
 
-
-
-let Umatrix (A:Matrix, rows:int, cols:int, size:int):int = 
-    for i in 0..2 do
-        if (A.values[i, i] = 9) then
-            printfn "%A" A.values[i, i]
-            2
+let rec checkZero(A:Matrix, rows:int, cols:int, size:int):result =
+    if (rows >= size) then
+        Error ("in func Zero: rows bigger size")
+    else
+        if (A.values[rows, cols] = 0.) then
+            checkZero(A, rows+1, cols, size)
         else 
-            5
-    3
+            SuccessZero(rows)
+
+let rec Umatrix (A:Matrix, rows:int, cols:int, size:int):result = 
+    if (rows >= size) then
+        Error ("rows bigger size")    
+    else
+        if (A.values[rows, cols] = 0.) then
+            let ZeroResult = checkZero(A, rows+1, cols, size)
+            let temp = 
+                match ZeroResult with 
+                | Error("in func Zero: rows bigger size") -> Error("det = 0")
+                | SuccessZero(rows) -> Error("Success!")
+            temp
+        else
+            Error("Success!")
+
+
 
 
 
@@ -24,5 +41,5 @@ let a = array2D [[6.;2.;20.]
                  [4.;9.;6.]
                  [10.;7.;4.]]
 let A = Matrix.ofArray2D a
-let q = Umatrix(A, 2, 3, 3)
-printfn "%A"q 
+let Q = Umatrix(A, 2, 2, 3)
+printfn "%A" Q
