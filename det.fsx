@@ -2,44 +2,71 @@ type Matrix = { values: float[,] }
     with
         static member ofArray2D (values: float [,]) = 
             { values = values }
-    
     end
 
 type result =
     | Error of string
     | SuccessZero of int 
+    | None
+    
 
-let rec checkZero(A:Matrix, rows:int, cols:int, size:int):result =
+let rec checkZero(A:Matrix, rows:int, cols:int, size:int):int =
     if (rows >= size) then
-        Error ("in func Zero: rows bigger size")
+        -1
     else
         if (A.values[rows, cols] = 0.) then
             checkZero(A, rows+1, cols, size)
         else 
-            SuccessZero(rows)
+            rows
 
-let rec Umatrix (A:Matrix, rows:int, cols:int, size:int):result = 
+let rec swapRows (A:Matrix, firstRows:int, secondRows:int, size:int, cols:int):result =
+    if (firstRows >= size || secondRows >= size || cols >= size) then
+        None
+    else
+        let temp = A.values[firstRows, cols]
+        A.values[firstRows, cols] <- A.values[secondRows, cols]
+        A.values[secondRows, cols] <- temp
+        swapRows(A, firstRows, secondRows, size, cols+1)
+
+let rec subCols(A:Matrix, rows:int, cols:int, size:int, koef:float, origRows:int):result =
+    if (cols = size) then 
+        None
+    else
+        A.values[rows, cols] <- (A.values[rows, cols] - koef*A.values[origRows, cols])
+        subCols(A, rows, cols+1, size, koef, origRows)
+
+let rec subRows(A:Matrix, rows:int, cols:int, size:int, origRows:int, origCols:int):result =
+    if (rows = size) then
+        None
+    else 
+        let koef = A.values[rows, cols] / A.values[origRows, origCols]
+        subCols(A, rows, cols, size, koef, origRows) |> ignore
+        subRows(A, rows+1, cols, size, origRows, origCols)
+
+let rec Umatrix (A:Matrix, rows:int, cols:int, size:int):int = 
+    printfn("aa")
     if (rows >= size) then
-        Error ("rows bigger size")    
+        1
     else
         if (A.values[rows, cols] = 0.) then
             let ZeroResult = checkZero(A, rows+1, cols, size)
-            let temp = 
-                match ZeroResult with 
-                | Error("in func Zero: rows bigger size") -> Error("det = 0")
-                | SuccessZero(rows) -> Error("Success!")
-            temp
+            if (ZeroResult = -1) then
+                Error ("in func Zero: rows bigger size")
+            else 
+                swapRows(A,rows,ZeroResult,size,0);
+            subRows(A, rows+1, cols, size, rows, cols) |> ignore
         else
-            Error("Success!")
+            subRows(A, rows+1, cols, size, rows, cols) |> ignore
+        Umatrix(A, rows+1, cols+1, size)
 
 
 
-
-
-let size = 3
-let a = array2D [[6.;2.;20.]
-                 [4.;9.;6.]
-                 [10.;7.;4.]]
+let size = 4
+let a = array2D [[12.;4.;2.; 1.]
+                 [4.;1.;6.; 34.]
+                 [10.;7.;4.; 5.]
+                 [3.;5.;4.; 2.]]
 let A = Matrix.ofArray2D a
-let Q = Umatrix(A, 2, 2, 3)
-printfn "%A" Q
+printfn "%A" A
+Umatrix(A, 0, 0, size)
+printfn "%A" A
