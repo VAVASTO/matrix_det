@@ -9,7 +9,6 @@ type result =
     | SuccessZero of int 
     | None
     
-
 let rec checkZero(A:Matrix, rows:int, cols:int, size:int):int =
     if (rows >= size) then
         -1
@@ -44,7 +43,6 @@ let rec subRows(A:Matrix, rows:int, cols:int, size:int, origRows:int, origCols:i
         subRows(A, rows+1, cols, size, origRows, origCols)
 
 let rec Umatrix (A:Matrix, rows:int, cols:int, size:int):int = 
-    printfn("aa")
     if (rows >= size) then
         1
     else
@@ -53,20 +51,30 @@ let rec Umatrix (A:Matrix, rows:int, cols:int, size:int):int =
             if (ZeroResult = -1) then
                 Error ("in func Zero: rows bigger size")
             else 
-                swapRows(A,rows,ZeroResult,size,0);
+                swapRows(A,rows,ZeroResult,size,0) 
             subRows(A, rows+1, cols, size, rows, cols) |> ignore
         else
             subRows(A, rows+1, cols, size, rows, cols) |> ignore
         Umatrix(A, rows+1, cols+1, size)
 
+let rec det(A:Matrix, rows:int, cols:int, size:int, det_):float =
+    if (rows = size) then
+        det_
+    else
+        det(A, rows+1, cols+1, size, det_*A.values[rows, cols])
 
-
+// main
 let size = 4
 let a = array2D [[12.;4.;2.; 1.]
                  [4.;1.;6.; 34.]
                  [10.;7.;4.; 5.]
-                 [3.;5.;4.; 2.]]
+                 [3.;5.;4.; 3.]]
 let A = Matrix.ofArray2D a
-printfn "%A" A
+printfn "Matrix before"
+printfn "%A\n" A
 Umatrix(A, 0, 0, size)
-printfn "%A" A
+let detetm = det (A, 0, 0, size, 1);
+printfn "Matrix after"
+printfn "%A\n" A
+printfn "Determinant of matrix"
+printfn "%A" detetm

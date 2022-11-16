@@ -10,10 +10,10 @@ type Matrix = { values: float[,] }
 
 // let Umatrix (A:Matrix, rows:int, cols:int, size:int):result = 
 //     if (true) then
-//         let Hell = "Ass"
-//         NiceRes (1, Hell)
+//         let Hello = "Heloo "
+//         NiceRes (1, Hello)
 //     else 
-//         NiceRes (0, "Dick")
+//         NiceRes (0, "AA")
 
 
 
@@ -26,6 +26,6 @@ let A = Matrix.ofArray2D a
 //let Q = Umatrix(A, 2, 3, 3)
 // let Text =
 //     match Q with 
-//     | NiceRes(1, Hell) -> Hell.ToString()
-//     | NiceRes(0, "Dick") -> "Dick"
+//     | NiceRes(1, Hello) -> Hello.ToString()
+//     | NiceRes(0, "AA") -> "AA"
 // printfn "%A" Text
