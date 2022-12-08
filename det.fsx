@@ -1,3 +1,4 @@
+let stopWatch = System.Diagnostics.Stopwatch.StartNew()
 type Matrix = { values: float[,] }
     with
         static member ofArray2D (values: float [,]) = 
@@ -69,7 +70,7 @@ let a = array2D [[12.;4.;2.; 1.]
                  [4.;1.;6.; 34.]
                  [10.;7.;4.; 5.]
                  [3.;5.;4.; 3.]]
-let A = Matrix.ofArray2D a
+let A = Matrix.ofArray2D a  
 printfn "Matrix before"
 printfn "%A\n" A
 Umatrix(A, 0, 0, size)
@@ -78,3 +79,7 @@ printfn "Matrix after"
 printfn "%A\n" A
 printfn "Determinant of matrix"
 printfn "%A" detetm
+
+printfn "Measure time:"
+stopWatch.Stop()
+printfn "%f" stopWatch.Elapsed.TotalMilliseconds
